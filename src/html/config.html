@@ -1,0 +1,44 @@
+<html>
+    <head>
+        <title>插件配置</title>
+        <link ref='stylesheet' type='text/css' href='../css/app.css'/>
+    </head>
+    <body>
+        <div>
+            <div class='inline'>
+                <input type='radio' name='mode' id='local'/>
+                <label for='本地词库'>本地词库</label>
+            </div>
+            <div class='inline'>
+                <input type='radio' name='mode' id='remote'/>
+                <label for='从服务加载'>从服务器加载</label>
+            </div>
+        </div>
+        <div id='localPanel' style='display: none;'>
+            <textarea placeholder="关键词，以英文状态逗号分隔"/>
+        </div>
+        <div id='remotePanel' style='display: none;'>
+            <form id='remoteForm'>
+                <div>
+                    <input
+                        type="url"
+                        name="url"
+                        id="url"
+                        placeholder="https://example.com"
+                        pattern="https://.*" size="20" required />
+                </div>
+                <div>
+                    <input type='number' placeholder="词库 ID">
+                </div>
+                <div>
+                    <button>增加词库 ID</button>
+                </div>
+                <div>
+                    <button>同步词库</button>
+                    <button>保存</button>
+                </div>
+            </form>
+        </div>
+    </body>
+    <script src='./js/config.js'></script>
+</html>
