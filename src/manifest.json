@@ -15,5 +15,8 @@
         },
         "description": "Open seekwords"
       }
-    }
+    },
+    "permissions": [
+      "storage"
+    ]
   }

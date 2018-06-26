@@ -1,6 +1,7 @@
 /*
  * Configuration.
  */
+'use strict';
 
 const localRadio = document.getElementById('local');
 const remoteRadio = document.getElementById('remote');
