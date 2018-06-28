@@ -1,7 +1,37 @@
 <html>
     <head>
         <title>插件配置</title>
-        <link ref='stylesheet' type='text/css' href='../css/app.css'/>
+        <meta charset="utf8"/>
+        <style>
+            .inline {
+                display: inline;
+            }
+
+            .form-item {
+                margin-top: 4px;
+                margin-bottom: 4px;
+            }
+
+            .primary-btn {
+                height: 30px;
+                border-radius: 5px;
+                background-color: deepskyblue;
+                color: white;
+                width: 80px;
+            }
+
+            .danger-btn {
+                height: 30px;
+                border-radius: 5px;
+                background-color: red;
+                color: white;
+                width: 80px;
+            }
+
+            .right {
+                float: right;
+            }
+        </style>
     </head>
     <body>
         <div>
@@ -15,30 +45,41 @@
             </div>
         </div>
         <div id='localPanel' style='display: none;'>
-            <textarea placeholder="关键词，以英文状态逗号分隔"/>
+            <div id='localForm'>
+                <div class='form-item'>
+                    <textarea
+                        id='localWords'
+                        rows="25"
+                        style="width: 100%;"
+                        placeholder="关键词，以英文状态逗号分隔"></textarea>
+                </div>
+                <div class='form-item right'>
+                    <button class='primary-btn' id='localSubmit'>保存</button>
+                </div>
+            </div>
         </div>
         <div id='remotePanel' style='display: none;'>
-            <form id='remoteForm'>
-                <div>
+            <div id='remoteForm'>
+                <div class='form-item'>
                     <input
                         type="url"
                         name="url"
                         id="url"
+                        style="width: 400px; height: 30px;"
                         placeholder="https://example.com"
                         pattern="https://.*" size="20" required />
                 </div>
-                <div>
-                    <input type='number' placeholder="词库 ID">
+                <div class='form-item'>
+                    <input type='number' placeholder="词库 ID" style="height: 30px;">
+                    <button class='primary-btn' id='add'>增加词库 ID</button>
                 </div>
-                <div>
-                    <button>增加词库 ID</button>
+                <div class='form-item'>
+                    <button class='primary-btn'>同步词库</button>
+                    <button class='primary-btn'>保存</button>
                 </div>
-                <div>
-                    <button>同步词库</button>
-                    <button>保存</button>
-                </div>
-            </form>
+            </div>
         </div>
     </body>
-    <script src='./js/config.js'></script>
+    <script src='../js/utils.js'></script>
+    <script src='../js/config.js'></script>
 </html>

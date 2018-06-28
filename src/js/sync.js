@@ -10,6 +10,7 @@ function syncCensorWords (url, callback) {
   const xhr = new XMLHttpRequest();
 
   xhr.open('GET', url, true);
+  xhr.withCredentials = true;
   xhr.onreadystatechange = function () {
     // 正确获取到数据.
     if (xhr.status === 200) {

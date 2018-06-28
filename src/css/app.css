@@ -1,3 +1,15 @@
 .inline {
     display: inline;
 }
+
+.menu {
+    min-width: 12em;
+}
+
+.menu-list {
+    list-style: none;
+}
+
+.menu-list > li {
+    display: block;
+}
