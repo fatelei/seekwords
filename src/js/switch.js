@@ -2,32 +2,34 @@
 
 'use strict';
 
+const enableBtn = document.getElementById('enable');
+const disableBtn = document.getElementById('disable');
+const removeBtn = document.getElementById('remove');
+
+
 function disableHighlight() {
-  window.localStorage.setItem('enableHighlight', false);
+  chrome.storage.local.set({ highlight: false }, () => {
+    console.log('disable seekwords');
+    enableBtn.classList.remove('active')
+    enableBtn.classList.add('active');
+  });
 }
 
 
 function enableHighlight() {
-  window.localStorage.setItem('enableHighlight', true);
-
-  chrome.tabs.query({active: true, currentWindow: true}, (tabs) => {
-    const port = chrome.tabs.connect(tabs[0].id);
-    port.postMessage({ action: 'enableHighlight', value: true });
-    port.onMessage.addListener((response) => {
-      console.log(response);
+  chrome.storage.local.set({ highlight: true }, () => {
+    console.log('enable seekwords');
+    chrome.tabs.query({active: true, currentWindow: true}, (tabs) => {
+      const port = chrome.tabs.connect(tabs[0].id);
+      port.postMessage({ action: 'enableHighlight', value: true });
+      port.onMessage.addListener((response) => {
+        console.log(response);
+      });
     });
+    enableBtn.classList.add('active')
+    enableBtn.classList.remove('active');
   });
-  
-
-  // chrome.runtime.sendMessage({ action: 'enableHighlight', value: true }, function (response) {
-  //   console.log(response);
-  // });
 }
-
-
-const enableBtn = document.getElementById('enable');
-const disableBtn = document.getElementById('disable');
-const removeBtn = document.getElementById('remove');
 
 
 enableBtn.addEventListener('click', (e) => {
@@ -43,4 +45,15 @@ removeBtn.addEventListener('click', () => {
   chrome.storage.local.remove(['censorwords'], () => {
     alert('词库清空成功!');
   });
+});
+
+
+chrome.storage.local.get(['highlight'], (rst) => {
+  if (typeof rst.highlight !== 'undefined') {
+    if (rst.highlight) {
+      enableBtn.classList.add('active');
+    } else {
+      disableBtn.classList.add('active');
+    }
+  }
 });

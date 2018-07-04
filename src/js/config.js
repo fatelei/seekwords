@@ -14,10 +14,6 @@ const loading = document.getElementById('loading');
 const helper = document.getElementById('helper');
 
 
-const callback = (values) => {
-    console.log(values);
-}
-
 
 localRadio.addEventListener('click', () => {
     remotePanel.style.display = 'none';
