@@ -17,7 +17,7 @@
                 border-radius: 5px;
                 background-color: deepskyblue;
                 color: white;
-                width: 80px;
+                width: 100px;
             }
 
             .danger-btn {
@@ -44,6 +44,7 @@
                 <label for='从服务加载'>从服务器加载</label>
             </div>
         </div>
+        <div id='loading'></div>
         <div id='localPanel' style='display: none;'>
             <div id='localForm'>
                 <div class='form-item'>
@@ -63,23 +64,19 @@
                 <div class='form-item'>
                     <input
                         type="url"
-                        name="url"
-                        id="url"
                         style="width: 400px; height: 30px;"
                         placeholder="https://example.com"
                         pattern="https://.*" size="20" required />
+                    <button class='primary-btn' id='add'>增加词库地址</button>
                 </div>
                 <div class='form-item'>
-                    <input type='number' placeholder="词库 ID" style="height: 30px;">
-                    <button class='primary-btn' id='add'>增加词库 ID</button>
-                </div>
-                <div class='form-item'>
-                    <button class='primary-btn'>同步词库</button>
-                    <button class='primary-btn'>保存</button>
+                    <button class='primary-btn' id='syncBtn'>同步词库</button>
+                    <button class='primary-btn' id='saveBtn'>保存</button>
                 </div>
             </div>
         </div>
     </body>
     <script src='../js/utils.js'></script>
+    <script src='../js/sync.js'></script>
     <script src='../js/config.js'></script>
 </html>

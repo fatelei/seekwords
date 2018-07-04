@@ -4,24 +4,27 @@
 
 /**
  * Sync sensitive words
- * @param {function} callback
+ * @param {String} url
  */
-function syncCensorWords (url, callback) {
-  const xhr = new XMLHttpRequest();
-
-  xhr.open('GET', url, true);
-  xhr.withCredentials = true;
-  xhr.onreadystatechange = function () {
-    // 正确获取到数据.
-    if (xhr.status === 200) {
-      if (xhr.responseType === 'json') {
+function syncCensorWords (url) {
+  return new Promise((resolve, reject) => {
+    const xhr = new XMLHttpRequest();
+    xhr.open('GET', url, true);
+    xhr.withCredentials = true;
+    xhr.onreadystatechange = () => {
+      // 正确获取到数据.
+      if (xhr.status === 200 && xhr.readyState === 4) {
         try {
-          callback(null, xhr.response)
+          const container = transform(JSON.parse(xhr.response));
+          resolve(container);
         } catch (err) {
-          console.error(err)
-          callback(err, null)
+          console.error(err);
+          reject(err);
         }
-      } 
-    }
-  }
-}
+      } else if (xhr.status >= 400) {
+        reject(xhr.responseText);
+      }
+    };
+    xhr.send();
+  });
+};

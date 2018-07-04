@@ -9,7 +9,12 @@ const localPanel = document.getElementById('localPanel');
 const remotePanel = document.getElementById('remotePanel');
 const localSubmitBtn = document.getElementById('localSubmit');
 const addBtn = document.getElementById('add');
-let count = 0
+const syncBtn = document.getElementById('syncBtn');
+
+const callback = (values) => {
+    console.log(values)
+}
+
 
 localRadio.addEventListener('click', () => {
     remotePanel.style.display = 'none';
@@ -36,17 +41,38 @@ addBtn.addEventListener('click', () => {
     div.className = 'form-item';
 
     const input = document.createElement('input');
-    input.setAttribute('placeholder', '词库 ID');
-    input.style = "height: 30px;";
-    input.type = 'number'
-    input.id = `warehouse-${count}`
+    input.setAttribute('placeholder', 'https://example.com');
+    input.style = 'width: 400px; height: 30px;';
+    input.type = 'url'
+    input.pattern = 'https://.*'
+    input.size = '20'
+    input.required = true
 
     const button = document.createElement('button');
     button.textContent = '删除';
     button.className = 'danger-btn';
+    button.style = 'margin-left: 3px;';
     button.addEventListener('click', () => {
         div.parentNode.removeChild(div);
     });
     div.append(input, button);
     addBtn.parentElement.parentElement.insertBefore(div, addBtn.parentElement.nextSibling);
+});
+
+
+syncBtn.addEventListener('click', () => {
+    const items = [];
+    const remoteForm = document.getElementById('remoteForm');
+    for (let index = 0; index < remoteForm.children.length; index++) {
+        const url = remoteForm.children[index].children[0].value;
+        if (url) {
+            items.push(syncCensorWords(url));
+        }
+    }
+
+    Promise.all(items).then(values => {
+        callback(values)
+    }).catch(err => {
+        console.log(err)
+    });
 });
