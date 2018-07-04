@@ -11,9 +11,11 @@ const localSubmitBtn = document.getElementById('localSubmit');
 const addBtn = document.getElementById('add');
 const syncBtn = document.getElementById('syncBtn');
 const loading = document.getElementById('loading');
+const helper = document.getElementById('helper');
+
 
 const callback = (values) => {
-    console.log(values)
+    console.log(values);
 }
 
 
@@ -22,6 +24,7 @@ localRadio.addEventListener('click', () => {
     localPanel.style.display = 'block';
 }); 
 
+
 remoteRadio.addEventListener('click', () => {
     localPanel.style.display = 'none';
     remotePanel.style.display = 'block';
@@ -29,13 +32,19 @@ remoteRadio.addEventListener('click', () => {
 
 
 localSubmitBtn.addEventListener('click', () => {
-    const localWordsEle = document.getElementById('localWords')
-    const words = formatCensorWords(localWordsEle.value)
-    window.localStorage.setItem('censorwords', JSON.stringify(words))
+    const localWordsEle = document.getElementById('localWords');
 
-    alert('添加成功!')
-    console.log('dssd')
+    if (localWordsEle.value.length > 0) {
+        loading.style.display = 'block';
+        const words = formatCensorWords(localWordsEle.value);
+        window.localStorage.setItem('censorwords', JSON.stringify(words));
+        loading.style.display = 'none';
+        alert('添加成功!');
+    } else {
+        alert('请填写需要插入的关键词');
+    }
 });
+
 
 addBtn.addEventListener('click', () => {
     const div = document.createElement('div');
@@ -44,10 +53,10 @@ addBtn.addEventListener('click', () => {
     const input = document.createElement('input');
     input.setAttribute('placeholder', 'https://example.com');
     input.style = 'width: 400px; height: 30px;';
-    input.type = 'url'
-    input.pattern = 'https://.*'
-    input.size = '20'
-    input.required = true
+    input.type = 'url';
+    input.pattern = 'https://.*';
+    input.size = '20';
+    input.required = true;
 
     const button = document.createElement('button');
     button.textContent = '删除';
@@ -63,6 +72,9 @@ addBtn.addEventListener('click', () => {
 
 syncBtn.addEventListener('click', () => {
     const items = [];
+    helper.className = '';
+    helper.innerText = '';
+
     const remoteForm = document.getElementById('remoteForm');
     for (let index = 0; index < remoteForm.children.length; index++) {
         const url = remoteForm.children[index].children[0].value;
@@ -73,10 +85,14 @@ syncBtn.addEventListener('click', () => {
 
     loading.style.display = 'block';
     Promise.all(items).then(values => {
-        callback(values)
+        callback(values);
         loading.style.display = 'none';
+        helper.innerText = '同步成功';
+        helper.className = 'success';
     }).catch(err => {
         loading.style.display = 'none';
-        console.log(err)
+        helper.innerText = '同步失败';
+        helper.className = 'error';
+        console.log(err);
     });
 });

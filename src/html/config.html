@@ -3,6 +3,10 @@
         <title>插件配置</title>
         <meta charset="utf8"/>
         <style>
+            button {
+                outline: none;
+            }
+
             .inline {
                 display: inline;
             }
@@ -50,6 +54,20 @@
                 width: 10%;
                 margin-top: 20%;
             }
+
+            .success {
+                background-color: rgba(99, 187, 99, 0.6);
+                color: white;
+                padding: 5px;
+                border-radius: 5px;
+            }
+
+            .error {
+                background-color: red;
+                color: white;
+                padding: 5px;
+                border-radius: 5px;
+            }
         </style>
     </head>
     <body>
@@ -92,6 +110,7 @@
                 </div>
                 <div class='form-item'>
                     <button class='primary-btn' id='syncBtn'>同步词库</button>
+                    <label id='helper'></label>
                 </div>
             </div>
         </div>

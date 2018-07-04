@@ -1,10 +1,14 @@
 'use strict';
 
-
+/**
+ * Format local words.
+ * @param {String} words 
+ */
 function formatCensorWords (words) {
   if (typeof words === 'string') {
     return words.split(',')
   }
+  return []
 }
 
 /**
