@@ -3,23 +3,19 @@
  */
 'use strict';
 
-chrome.runtime.onInstalled.addListener(function() {
-  chrome.storage.sync.set({color: '#3aa757'}, function() {
-    console.log('The color is green.');
-  });
-});
-
-
-chrome.runtime.onMessage.addListener(function (message, callback) {
-  const action = message.action
-  switch (action) {
-    case 'local':
-      // Update local storage.
-      break
-    case 'remote':
-      // Sync words via remote api.
-      break
-    default:
-      console.warn(`unsupport action ${action}`)
-  }
-});
+// chrome.runtime.onMessage.addListener(function (message, callback) {
+//   console.log(message);
+//   const action = message.action;
+  
+//   switch (action) {
+//     case 'enableHighlight':
+//       if (action.value) {
+//         chrome.tabs.ex
+//         console.info('do highlight');
+//       }
+//       // Update local storage.
+//       break
+//     default:
+//       console.warn(`unsupport action ${action}`)
+//   }
+// });

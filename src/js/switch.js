@@ -3,23 +3,33 @@
 'use strict';
 
 function disableHighlight() {
-  chrome.storage.sync.set({ enableHighlight: false}, function() {
-    console.log('highlight is anabled');
-  });
+  window.localStorage.setItem('enableHighlight', false);
 }
 
 
 function enableHighlight() {
-  chrome.storage.sync.set({ enableHighlight: true }, function() {
-    console.log('highlight is closed');
+  window.localStorage.setItem('enableHighlight', true);
+
+  chrome.tabs.query({active: true, currentWindow: true}, (tabs) => {
+    const port = chrome.tabs.connect(tabs[0].id);
+    port.postMessage({ action: 'enableHighlight', value: true });
+    port.onMessage.addListener((response) => {
+      console.log(response);
+    });
   });
+  
+
+  // chrome.runtime.sendMessage({ action: 'enableHighlight', value: true }, function (response) {
+  //   console.log(response);
+  // });
 }
 
 
 const enableBtn = document.getElementById('enable');
 const disableBtn = document.getElementById('disable');
 
-enableBtn.addEventListener('click', () => {
+enableBtn.addEventListener('click', (e) => {
+  e.preventDefault();
   enableHighlight();
 });
 

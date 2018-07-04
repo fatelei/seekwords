@@ -34,14 +34,16 @@ function transform (words) {
  * @param {Array} words 
  */
 function updateCensorWords (words) {
-  let oldWords = window.localStorage.getItem('censorwords') || '[]';
-  oldWords = JSON.parse(oldWords);
-
-  for (let word of words) {
-    if (!oldWords.includes(word)) {
-      oldWords.push(word);
+  chrome.storage.local.get(['censorwords'], (result) => {
+    const oldWords = JSON.parse(result.censorwords || '[]');
+    for (let word of words) {
+      if (!oldWords.includes(word)) {
+        oldWords.push(word);
+      }
     }
-  }
-
-  window.localStorage.setItem('censorwords', JSON.stringify(oldWords));
+  
+    chrome.storage.local.set({'censorwords': JSON.stringify(oldWords)}, () => {
+      console.log('update censor words successfully');
+    });
+  });
 }

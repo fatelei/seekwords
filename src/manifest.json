@@ -1,24 +1,31 @@
 {
-    "name": "Seekwords",
-    "description" : "Highlight words in page, using aho corasick algorithm.",
-    "version": "1.0",
-    "browser_action": {
-      "default_popup": "popup.html",
-      "default_icon": "rainbow.png"
-    },
-    "manifest_version": 2,
-    "commands": {
-      "_execute_browser_action": {
-        "suggested_key": {
-          "default": "Ctrl+Shift+F",
-          "mac": "MacCtrl+Shift+F"
-        },
-        "description": "Open seekwords"
-      }
-    },
-    "permissions": [
-      "storage",
-      "https://*/",
-      "http://*/"
-    ]
-  }
+  "name": "Seekwords",
+  "description" : "Highlight words in page, using aho corasick algorithm.",
+  "version": "1.0",
+  "browser_action": {
+    "default_popup": "popup.html",
+    "default_icon": "rainbow.png"
+  },
+  "manifest_version": 2,
+  "commands": {
+    "_execute_browser_action": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+F",
+        "mac": "MacCtrl+Shift+F"
+      },
+      "description": "Open seekwords"
+    }
+  },
+  "permissions": [
+    "storage",
+    "https://*/",
+    "http://*/",
+    "activeTab"
+  ],
+  "content_scripts": [
+    {
+      "matches": ["http://*/*", "https://*/"],
+      "js": ["./js/content_script.js"]
+    }
+  ]
+}
