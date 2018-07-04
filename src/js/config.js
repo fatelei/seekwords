@@ -37,7 +37,7 @@ localSubmitBtn.addEventListener('click', () => {
     if (localWordsEle.value.length > 0) {
         loading.style.display = 'block';
         const words = formatCensorWords(localWordsEle.value);
-        window.localStorage.setItem('censorwords', JSON.stringify(words));
+        updateCensorWords(words);
         loading.style.display = 'none';
         alert('添加成功!');
     } else {
@@ -85,7 +85,15 @@ syncBtn.addEventListener('click', () => {
 
     loading.style.display = 'block';
     Promise.all(items).then(values => {
-        callback(values);
+        const words = [];
+        values.forEach(value => {
+            value.forEach(item => {
+                if (!words.includes(item)) {
+                    words.push(item);
+                }
+            });
+        });
+        updateCensorWords(words)
         loading.style.display = 'none';
         helper.innerText = '同步成功';
         helper.className = 'success';
