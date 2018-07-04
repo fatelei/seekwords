@@ -10,6 +10,7 @@ const remotePanel = document.getElementById('remotePanel');
 const localSubmitBtn = document.getElementById('localSubmit');
 const addBtn = document.getElementById('add');
 const syncBtn = document.getElementById('syncBtn');
+const loading = document.getElementById('loading');
 
 const callback = (values) => {
     console.log(values)
@@ -70,9 +71,12 @@ syncBtn.addEventListener('click', () => {
         }
     }
 
+    loading.style.display = 'block';
     Promise.all(items).then(values => {
         callback(values)
+        loading.style.display = 'none';
     }).catch(err => {
+        loading.style.display = 'none';
         console.log(err)
     });
 });

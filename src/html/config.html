@@ -31,6 +31,25 @@
             .right {
                 float: right;
             }
+
+            #loading {
+                top: 0;
+                left: 0;
+                position: fixed;
+                z-index: 20;
+                width: 100%;
+                height: 100%;
+                background-repeat: no-repeat;
+                background-color: rgba(0, 0, 0, 0.5);
+            }
+
+            #loading > img {
+                display: block;
+                margin-left: auto;
+                margin-right: auto;
+                width: 10%;
+                margin-top: 20%;
+            }
         </style>
     </head>
     <body>
@@ -44,7 +63,9 @@
                 <label for='从服务加载'>从服务器加载</label>
             </div>
         </div>
-        <div id='loading'></div>
+        <div id='loading' style="display: none;">
+            <img src='../image/loading.gif'/>
+        </div>
         <div id='localPanel' style='display: none;'>
             <div id='localForm'>
                 <div class='form-item'>
@@ -71,7 +92,6 @@
                 </div>
                 <div class='form-item'>
                     <button class='primary-btn' id='syncBtn'>同步词库</button>
-                    <button class='primary-btn' id='saveBtn'>保存</button>
                 </div>
             </div>
         </div>
