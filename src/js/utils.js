@@ -43,7 +43,9 @@ function updateCensorWords (words) {
     }
   
     chrome.storage.local.set({'censorwords': JSON.stringify(oldWords)}, () => {
-      console.log('update censor words successfully');
+      chrome.storage.local.set({'version': Math.floor((new Date()).getTime() / 1000)}, () => {
+        console.log('update censor words successfully');
+      });
     });
   });
 }

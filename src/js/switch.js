@@ -27,6 +27,8 @@ function enableHighlight() {
 
 const enableBtn = document.getElementById('enable');
 const disableBtn = document.getElementById('disable');
+const removeBtn = document.getElementById('remove');
+
 
 enableBtn.addEventListener('click', (e) => {
   e.preventDefault();
@@ -35,4 +37,10 @@ enableBtn.addEventListener('click', (e) => {
 
 disableBtn.addEventListener('click', () => {
   disableHighlight();
+});
+
+removeBtn.addEventListener('click', () => {
+  chrome.storage.local.remove(['censorwords'], () => {
+    alert('词库清空成功!');
+  });
 });
