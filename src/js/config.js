@@ -14,7 +14,6 @@ const loading = document.getElementById('loading');
 const helper = document.getElementById('helper');
 
 
-
 localRadio.addEventListener('click', () => {
     remotePanel.style.display = 'none';
     localPanel.style.display = 'block';

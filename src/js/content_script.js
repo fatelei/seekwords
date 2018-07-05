@@ -1,7 +1,17 @@
 let patterns = [];
 let currentVersion = 0;
 const matchOperatorsRe = /[|\\{}()[\]^$+*?.]/g;
-const tpl = '<span class="keyword">{keyword}</span>';
+const tpl = '<span class="seekword">{keyword}</span>';
+const letters = '0123456789ABCDEF';
+
+function getRandomColor() {
+  let color = '#';
+  for (let i = 0; i < 6; i++) {
+    color += letters[Math.floor(Math.random() * 16)];
+  }
+  return color;
+}
+
 
 function escapeStringRegexp(str) {
 	if (typeof str !== 'string') {
@@ -13,17 +23,26 @@ function escapeStringRegexp(str) {
 function iterNodes(node, patterns) {
   if (node.childNodes.length === 0) {
     if (node.nodeType === 3) { // text node
+      if (['seekword', 'keyword'].includes(node.parentNode.className)) {
+        return
+      }
       let data = node.data;
+      let flag = false
 
       for (let pattern of patterns) {
         if (data.indexOf(pattern[0]) !== -1) {
-          data = data.replace(pattern[1], `<span class="keyword">${pattern[0]}</span>`);
+          let color = getRandomColor()
+          data = data.replace(pattern[1], `<span class="seekword" style="background-color: ${color}; border-radius: 2px; padding: 2px; color: white;">${pattern[0]}</span>`);
+          flag = true
         }
       }
-      const span = document.createElement('span');
-      span.innerHTML = data;
 
-      node.replaceWith(span);
+      if (flag) {
+        const span = document.createElement('span');
+        span.innerHTML = data;
+
+        node.replaceWith(span);
+      }
     }
     return
   }
@@ -37,12 +56,12 @@ function iterNodes(node, patterns) {
  * Update regex array.
  */
 function updateRegexAry (callback) {
-  chrome.storage.local.get(['version'], (v) => {
-    if (v.version > currentVersion) {
-      currentVersion = v.version;
-      chrome.storage.local.get(['censorwords'], (result) => {
+  chrome.runtime.sendMessage({ action: 'fetch', key: 'version' }, (resp) => {
+    if (resp.version > currentVersion) {
+      currentVersion = resp.version;
+      chrome.runtime.sendMessage({ action: 'fetch', key: 'censorwords' }, (result) => {
         const words = JSON.parse(result.censorwords || '[]');
-    
+        
         patterns = [];
         for (let word of words) {
           patterns.push([word, new RegExp(escapeStringRegexp(word), 'gi')])
@@ -86,6 +105,43 @@ chrome.runtime.onConnect.addListener((port) => {
 });
 
 
-document.addEventListener("DOMContentLoaded", function(event) {
-  console.log("DOM fully loaded and parsed");
-});
+// Select the node that will be observed for mutations
+const targetNode = document.getElementsByTagName('body')
+
+// Options for the observer (which mutations to observe)
+const config = { attributes: true, childList: true, subtree: true };
+
+// Callback function to execute when mutations are observed
+const callback = function(mutationsList) {
+  const contentArea = document.getElementById('navilist');
+  if (contentArea) {
+    chrome.runtime.sendMessage({ action: 'fetch', key: 'highlight' }, (rst) => {
+      if (rst.highlight) {
+        for (let mutation of mutationsList) {
+          if (mutation.type === 'childList') {
+            updateRegexAry(() => {
+              const contentEle = document.getElementsByClassName('content');
+              for (let i = 0; i < contentEle.length; i++) {
+                contentEle[i].childNodes.forEach(node => {
+                  iterNodes(node, patterns)
+                });
+              }
+              const titleEle = document.getElementsByClassName('title');
+              for (let i = 0; i < titleEle.length; i++) {
+                titleEle[i].childNodes.forEach(node => {
+                  iterNodes(node, patterns)
+                });
+              }
+            });
+          }
+        }
+      }
+    });
+  }
+};
+
+// Create an observer instance linked to the callback function
+const observer = new MutationObserver(callback);
+
+// Start observing the target node for configured mutations
+observer.observe(targetNode[0], config);
