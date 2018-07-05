@@ -1,3 +1,5 @@
+'use strict';
+
 let patterns = [];
 let currentVersion = 0;
 const matchOperatorsRe = /[|\\{}()[\]^$+*?.]/g;

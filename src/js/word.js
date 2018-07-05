@@ -1,3 +1,5 @@
+'use strict';
+
 const wordsList = document.getElementById('word-list');
 
 chrome.storage.local.get(['censorwords'], (rst) => {
