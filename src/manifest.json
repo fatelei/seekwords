@@ -16,6 +16,12 @@
       "description": "Open seekwords"
     }
   },
+  "icons": {
+    "16": "rainbow.png",
+    "32": "rainbow.png",
+    "48": "rainbow.png",
+    "128": "rainbow.png"
+  },
   "permissions": [
     "storage",
     "https://*/",
