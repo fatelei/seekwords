@@ -12,6 +12,7 @@ function disableHighlight() {
     console.log('disable seekwords');
     enableBtn.classList.remove('active')
     enableBtn.classList.add('active');
+    window.close();
   });
 }
 
@@ -28,6 +29,7 @@ function enableHighlight() {
     });
     enableBtn.classList.add('active')
     enableBtn.classList.remove('active');
+    window.close();
   });
 }
 
