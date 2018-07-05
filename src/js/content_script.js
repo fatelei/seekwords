@@ -27,19 +27,41 @@ function iterNodes(node, patterns) {
         return
       }
       let data = node.data;
-      let flag = false
+      const pos = [];
+      const longest = [];
 
       for (let pattern of patterns) {
-        if (data.indexOf(pattern[0]) !== -1) {
-          let color = getRandomColor()
-          data = data.replace(pattern[1], `<span class="seekword" style="background-color: ${color}; border-radius: 2px; padding: 2px; color: white;">${pattern[0]}</span>`);
-          flag = true
+        if (pattern[0].length > 0) {
+          const subStr = longest.filter(item => item.includes(pattern[0]));
+          if (subStr.length === 0) {
+            let s = data.indexOf(pattern[0]);
+            if (s !== -1) {
+              e = s + pattern[0].length - 1;
+              pos.push([s, e, pattern[0]]);
+              longest.push(pattern[0]);
+            }
+          }
         }
       }
 
-      if (flag) {
+      const tmp = [];
+      if (pos.length > 0) {
+        for (let i = 0; i <= pos.length - 1; i++) {
+          tmp.push(data.slice(0, pos[i][0]));
+
+          let color = getRandomColor();
+          tmp.push(`<span class="seekword" style="background-color: ${color}; border-radius: 2px; padding: 2px; color: white;">${pos[i][2]}</span>`);
+          if (typeof pos[i+1] === 'undefined') {
+            tmp.push(data.slice(pos[i][1] + 1));
+          } else {
+            tmp.push(data.slice(pos[i][1] + 1, pos[i+1][0]));
+          }
+        }
+      }
+
+      if (pos.length > 0) {
         const span = document.createElement('span');
-        span.innerHTML = data;
+        span.innerHTML = tmp.join('');
 
         node.replaceWith(span);
       }
@@ -60,7 +82,8 @@ function updateRegexAry (callback) {
     if (resp.version > currentVersion) {
       currentVersion = resp.version;
       chrome.runtime.sendMessage({ action: 'fetch', key: 'censorwords' }, (result) => {
-        const words = JSON.parse(result.censorwords || '[]');
+        let words = JSON.parse(result.censorwords || '[]');
+        words = words.sort((a, b) => b.length - a.length); 
         
         patterns = [];
         for (let word of words) {
@@ -109,24 +132,28 @@ chrome.runtime.onConnect.addListener((port) => {
 const targetNode = document.getElementsByTagName('body')
 
 // Options for the observer (which mutations to observe)
-const config = { attributes: true, childList: true, subtree: true };
+const config = { childList: true, subtree: true };
 
 // Callback function to execute when mutations are observed
 const callback = function(mutationsList) {
   const contentArea = document.getElementById('navilist');
   if (contentArea) {
-    chrome.runtime.sendMessage({ action: 'fetch', key: 'highlight' }, (rst) => {
-      if (rst.highlight) {
-        for (let mutation of mutationsList) {
-          if (mutation.type === 'childList') {
+    const wantMutation = mutationsList.filter(item => {
+      return item.type === 'childList' && item.addedNodes.length > 0 && item.target.id === 'navilist';
+    })
+
+    if (wantMutation.length > 0) {
+      chrome.runtime.sendMessage({ action: 'fetch', key: 'highlight' }, (rst) => {
+        if (rst.highlight) {
+          const contentEle = document.getElementsByClassName('content');
+          const titleEle = document.getElementsByClassName('title');
+          if (contentEle.length > 0 || titleEle.length > 0) {
             updateRegexAry(() => {
-              const contentEle = document.getElementsByClassName('content');
               for (let i = 0; i < contentEle.length; i++) {
                 contentEle[i].childNodes.forEach(node => {
                   iterNodes(node, patterns)
                 });
               }
-              const titleEle = document.getElementsByClassName('title');
               for (let i = 0; i < titleEle.length; i++) {
                 titleEle[i].childNodes.forEach(node => {
                   iterNodes(node, patterns)
@@ -135,8 +162,8 @@ const callback = function(mutationsList) {
             });
           }
         }
-      }
-    });
+      });
+    }
   }
 };
 

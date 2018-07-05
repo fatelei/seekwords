@@ -19,11 +19,17 @@ function formatCensorWords (words) {
 function transform (words) {
   const container = [];
   for (let word of words) {
-    const tmp = word.primary_key.split('|');
-    for (let item of tmp) {
-      if (!container.includes(item)) {
-        container.push(item)
+    try {
+      const tmp = word.split('|');
+      for (let item of tmp) {
+        if (tmp.length > 0) {
+          if (!container.includes(item)) {
+            container.push(item)
+          }
+        }
       }
+    } catch (err) {
+      console.error(err)
     }
   }
   return container;

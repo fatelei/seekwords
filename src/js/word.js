@@ -1,7 +1,8 @@
 const wordsList = document.getElementById('word-list');
 
 chrome.storage.local.get(['censorwords'], (rst) => {
-  const words = JSON.parse(rst.censorwords || '[]');
+  let words = JSON.parse(rst.censorwords || '[]');
+  words = words.sort((a, b) => b.length - a.length);
   if (words.length > 0) {
     words.forEach(word => {
       const ele = document.createElement('div');
