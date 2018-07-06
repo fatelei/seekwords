@@ -32,8 +32,15 @@ localSubmitBtn.addEventListener('click', () => {
     if (localWordsEle.value.length > 0) {
         loading.style.display = 'block';
         const words = formatCensorWords(localWordsEle.value);
-        updateCensorWords(words);
+        const tooLong = words.filter(word => word.length > 5)
+        if (tooLong.length > 0) {
+            alert('关键词单个词长度超过 5');
+            loading.style.display = 'none';
+            return;
+        }
+
         loading.style.display = 'none';
+        updateCensorWords(words);
         alert('添加成功!');
     } else {
         alert('请填写需要插入的关键词');
