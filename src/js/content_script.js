@@ -29,7 +29,7 @@ function iterNodes(node, patterns) {
         return
       }
       let data = node.data;
-      const pos = [];
+      let pos = [];
       const longest = [];
 
       for (let pattern of patterns) {
@@ -38,7 +38,7 @@ function iterNodes(node, patterns) {
           if (subStr.length === 0) {
             let s = data.indexOf(pattern[0]);
             if (s !== -1) {
-              e = s + pattern[0].length - 1;
+              let e = s + pattern[0].length - 1;
               pos.push([s, e, pattern[0]]);
               longest.push(pattern[0]);
             }
@@ -46,10 +46,13 @@ function iterNodes(node, patterns) {
         }
       }
 
+      pos = pos.sort((a, b) => a[0] - b[0])
       const tmp = [];
       if (pos.length > 0) {
         for (let i = 0; i <= pos.length - 1; i++) {
-          tmp.push(data.slice(0, pos[i][0]));
+          if (i === 0) {
+            tmp.push(data.slice(0, pos[i][0]));
+          }
 
           let color = getRandomColor();
           tmp.push(`<span class="seekword" style="background-color: ${color}; border-radius: 2px; padding: 2px; color: white;">${pos[i][2]}</span>`);
