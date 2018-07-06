@@ -29,6 +29,11 @@ function iterNodes(node, patterns) {
         return
       }
       let data = node.data;
+
+      if (data.indexOf('<img src=') >= 0) {
+        return
+      }
+
       let pos = [];
       const longest = [];
 
