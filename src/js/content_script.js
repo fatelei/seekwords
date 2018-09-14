@@ -79,6 +79,10 @@ function iterNodes(node, patterns) {
     return
   }
 
+  if (node.nodeName === 'PRE') {
+    return
+  }
+
   return node.childNodes.forEach(item => {
     iterNodes(item, patterns);
   })
